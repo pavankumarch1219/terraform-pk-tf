@@ -75,9 +75,9 @@ variable "admin_username" {
   default     = "azureuser"
 }
 
-variable "ssh_public_key_path" {
+variable "ssh_public_key" {
   type        = string
-  description = "Path to SSH public key"
-  default     = "/home/azureuser/.ssh/pavan.pub"
+  description = "SSH public key content"
 }
+
 
