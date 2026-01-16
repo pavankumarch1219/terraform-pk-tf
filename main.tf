@@ -79,11 +79,11 @@ resource "azurerm_linux_virtual_machine" "vm" {
   network_interface_ids = [
     azurerm_network_interface.nic.id
   ]
+admin_ssh_key {
+  username   = var.admin_username
+  public_key = var.ssh_public_key
+}
 
-  admin_ssh_key {
-    username   = var.admin_username
-    public_key = file(var.ssh_public_key_path)
-  }
 
   os_disk {
     name                 = "${var.vm_name}-osdisk"
