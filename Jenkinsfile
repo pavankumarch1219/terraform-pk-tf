@@ -9,6 +9,7 @@ pipeline {
     }
 
     stages {
+
         stage('Terraform Init') {
             steps {
                 sh 'terraform init'
@@ -23,7 +24,15 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                sh 'terraform apply -auto-approve'
+                withCredentials([sshUserPrivateKey(
+                    credentialsId: 'AZURE_VM_SSH_KEY',
+                    keyFileVariable: 'SSH_KEY_FILE'
+                )]) {
+                    sh '''
+                      terraform apply -auto-approve \
+                        -var="ssh_public_key=$(cat ${SSH_KEY_FILE}.pub)"
+                    '''
+                }
             }
         }
     }
