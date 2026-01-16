@@ -11,19 +11,25 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                sh 'terraform init -input=false'
+                dir('pavan-terraform-azure') {
+                    sh 'terraform init -input=false'
+                }
             }
         }
 
         stage('Terraform Validate') {
             steps {
-                sh 'terraform validate'
+                dir('pavan-terraform-azure') {
+                    sh 'terraform validate'
+                }
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                sh 'terraform apply -auto-approve'
+                dir('pavan-terraform-azure') {
+                    sh 'terraform apply -auto-approve'
+                }
             }
         }
     }
