@@ -1,11 +1,14 @@
-
-# Existing Resource Group
+#################################
+# Resource Group
+#################################
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
 }
 
+#################################
 # Virtual Network
+#################################
 resource "azurerm_virtual_network" "vnet" {
   name                = var.vnet_name
   location            = azurerm_resource_group.rg.location
@@ -13,7 +16,9 @@ resource "azurerm_virtual_network" "vnet" {
   address_space       = var.vnet_address_space
 }
 
+#################################
 # Subnet
+#################################
 resource "azurerm_subnet" "subnet" {
   name                 = var.subnet_name
   resource_group_name  = azurerm_resource_group.rg.name
@@ -21,6 +26,9 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = var.subnet_address_prefixes
 }
 
+#################################
+# Network Security Group
+#################################
 resource "azurerm_network_security_group" "nsg" {
   name                = var.nsg_name
   location            = azurerm_resource_group.rg.location
@@ -39,11 +47,17 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
+#################################
+# NSG Association
+#################################
 resource "azurerm_subnet_network_security_group_association" "subnet_nsg" {
   subnet_id                 = azurerm_subnet.subnet.id
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
+#################################
+# Public IP
+#################################
 resource "azurerm_public_ip" "pip" {
   name                = var.public_ip_name
   location            = azurerm_resource_group.rg.location
@@ -52,6 +66,9 @@ resource "azurerm_public_ip" "pip" {
   sku                 = "Standard"
 }
 
+#################################
+# Network Interface
+#################################
 resource "azurerm_network_interface" "nic" {
   name                = var.nic_name
   location            = azurerm_resource_group.rg.location
@@ -65,9 +82,9 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 
-
-
-
+#################################
+# Linux Virtual Machine
+#################################
 resource "azurerm_linux_virtual_machine" "vm" {
   name                = var.vm_name
   location            = azurerm_resource_group.rg.location
@@ -79,11 +96,11 @@ resource "azurerm_linux_virtual_machine" "vm" {
   network_interface_ids = [
     azurerm_network_interface.nic.id
   ]
-admin_ssh_key {
-  username   = var.admin_username
-  public_key = var.ssh_public_key
-}
 
+  admin_ssh_key {
+    username   = var.admin_username
+    public_key = var.ssh_public_key
+  }
 
   os_disk {
     name                 = "${var.vm_name}-osdisk"
@@ -100,6 +117,3 @@ admin_ssh_key {
 
   disable_password_authentication = true
 }
-
-
-
