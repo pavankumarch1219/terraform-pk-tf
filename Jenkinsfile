@@ -11,25 +11,19 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                sh '''
-                  terraform init -input=false
-                '''
+                sh 'terraform init -input=false'
             }
         }
 
         stage('Terraform Validate') {
             steps {
-                sh '''
-                  terraform validate
-                '''
+                sh 'terraform validate'
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                sh '''
-                  terraform apply -auto-approve
-                '''
+                sh 'terraform apply -auto-approve'
             }
         }
     }
